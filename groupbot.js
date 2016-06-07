@@ -15,17 +15,19 @@ bot.on('ready', () => {
     bot.sendMessage("185138605528842240", "Bot Ready!").catch((err) => { console.log(err); });
 });
 
+//Setting up list of words for different group types.
 var grindKeys =["grind","susans","sausans","sausages"];
 var missionKeys=["disco","scroll","boss"];
 var pvpKeys = ["pvp", "murder", "murdertime", "fancypants","kill","pk"];
 var pvpGroup;
 var grindGroup;
 var missionGroup;
-
+//Setting up group object
 function Group(number, members, activity) {
     this.number = number;
     this.members = members;
     this.activity = activity;
+    //Function to add a member to the group
     this.addMember = function (newMember,mentions){
         this.number += 1;
         this.members += newMember;
@@ -34,9 +36,11 @@ function Group(number, members, activity) {
             this.members +=mentions;
         }
     };
+    //Function to announce group status 
     this.announceGrp = function (msg){
          bot.reply(msg, this.number + " players are currently looking for a " + this.activity + " group: " + this.members ).catch((err) => { console.log(err); });
     };
+    //Function to check if group is full
     this.isFull = function(msg){
         if (this.number == 5) {
             bot.reply(msg, "Party Ready for " + this.activity+ "! please send out invites to " + this.members ).catch((err) => { console.log(err); });
@@ -45,6 +49,7 @@ function Group(number, members, activity) {
         }
     };
 };
+//Function to check for empty object
 function isEmpty(object) {
   for(var key in object) {
     if(object.hasOwnProperty(key)){
@@ -53,12 +58,14 @@ function isEmpty(object) {
   }
   return true;
 }
+//Function to create the group objects
+//(Needs to be re-engineered - One of my top priorities)
 function createGroup(msg, activity) {
     for (a in pvpKeys) {
         if (pvpKeys[a] == activity) {
             console.log(a);
             if (isEmpty(pvpGroup)) {
-                pvpGroup = new Group(1 + msg.mentions.length, msg.author + msg.mentions, activity);
+                pvpGroup = new Group(1 + msg.mentions.length, msg.author + msg.mentions, "PVP");
                 pvpGroup.announceGrp(msg);
                 pvpGroup.isFull(msg);
             } else {
@@ -72,7 +79,7 @@ function createGroup(msg, activity) {
     for (a in grindKeys) {
         if (grindKeys[a] == activity) {
             if (isEmpty(grindGroup)) {
-                grindGroup = new Group(1 + msg.mentions.length, msg.author + msg.mentions, activity);
+                grindGroup = new Group(1 + msg.mentions.length, msg.author + msg.mentions, "Grind");
                 grindGroup.announceGrp(msg);
                 grindGroup.isFull(msg);
             } else {
@@ -86,7 +93,7 @@ function createGroup(msg, activity) {
     for (a in missionKeys) {
         if (missionKeys[a] == activity) {
             if (isEmpty(missionGroup)) {
-                missionGroup = new Group(1 + msg.mentions.count(), msg.author + msg.mentions, activity);
+                missionGroup = new Group(1 + msg.mentions.count(), msg.author + msg.mentions, "Mission\Disco");
                 missionGroup.announceGrp(msg);
                 missionGroup.isFull(msg);
             } else {
@@ -97,7 +104,8 @@ function createGroup(msg, activity) {
         }
     }
 };
-
+//Bot catch for incoming messages. Splits them out to interpret what user would like to do.
+//(Could also use a bit of re-engineering. Not so high of priority.)
 bot.on('message', (msg) => {
     if (msg.content.toLowerCase().startsWith("!lfg")) {
         if (msg.content.indexOf("|") == -1) {
