@@ -22,6 +22,7 @@ var pvpKeys = ["pvp", "murder", "murdertime", "fancypants","kill","pk"];
 var pvpGroup;
 var grindGroup;
 var missionGroup;
+
 //Setting up group object
 function Group(number, members, activity) {
     this.number = number;
@@ -59,47 +60,22 @@ function isEmpty(object) {
   return true;
 }
 //Function to create the group objects
-//(Needs to be re-engineered - One of my top priorities)
+
+var grpArray = [pvpGroup,grindGroup,missionGroup];
+var actArrays = [ pvpKeys,grindKeys,missionKeys]; 
 function createGroup(msg, activity) {
-    for (a in pvpKeys) {
-        if (pvpKeys[a] == activity) {
-            console.log(a);
-            if (isEmpty(pvpGroup)) {
-                pvpGroup = new Group(1 + msg.mentions.length, msg.author + msg.mentions, "PVP");
-                pvpGroup.announceGrp(msg);
-                pvpGroup.isFull(msg);
-            } else {
-                console.log("calling add member");
-                pvpGroup.addMember(msg.author, msg.mentions );
-                pvpGroup.announceGrp(msg);
-                pvpGroup.isFull(msg);
-            }
-        }
-    }
-    for (a in grindKeys) {
-        if (grindKeys[a] == activity) {
-            if (isEmpty(grindGroup)) {
-                grindGroup = new Group(1 + msg.mentions.length, msg.author + msg.mentions, "Grind");
-                grindGroup.announceGrp(msg);
-                grindGroup.isFull(msg);
-            } else {
-                console.log("calling add member");
-                grindGroup.addMember(msg.author, msg.mentions);
-                grindGroup.announceGrp(msg);
-                grindGroup.isFull(msg);
-            }
-        }
-    }
-    for (a in missionKeys) {
-        if (missionKeys[a] == activity) {
-            if (isEmpty(missionGroup)) {
-                missionGroup = new Group(1 + msg.mentions.count(), msg.author + msg.mentions, "Mission\Disco");
-                missionGroup.announceGrp(msg);
-                missionGroup.isFull(msg);
-            } else {
-                missionGroup.addMember(msg.author, msg.mentions);
-                missionGroup.announceGrp(msg);
-                missionGroup.isFull(msg);
+    for (act in actArrays){
+        for (a in actArrays[act]){
+            if ( actArrays[act][a] == activity) {
+                if (isEmpty(grpArray[act])) {
+                    grpArray[act] = new Group(1 + msg.mentions.length, msg.author + msg.mentions, activity);
+                    console.log(grpArray[act])
+                    
+                } else {
+                    grpArray[act].addMember(msg.author, msg.mentions);
+                }
+                grpArray[act].announceGrp(msg);
+                grpArray[act].isFull(msg);
             }
         }
     }
