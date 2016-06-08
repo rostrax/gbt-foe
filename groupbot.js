@@ -60,7 +60,6 @@ function isEmpty(object) {
   return true;
 }
 //Function to create the group objects
-
 var grpArray = [pvpGroup,grindGroup,missionGroup];
 var actArrays = [ pvpKeys,grindKeys,missionKeys]; 
 function createGroup(msg, activity) {
@@ -69,9 +68,8 @@ function createGroup(msg, activity) {
             if ( actArrays[act][a] == activity) {
                 if (isEmpty(grpArray[act])) {
                     grpArray[act] = new Group(1 + msg.mentions.length, msg.author + msg.mentions, activity);
-                    console.log(grpArray[act])
-                    
-                } else {
+                }
+                else {
                     grpArray[act].addMember(msg.author, msg.mentions);
                 }
                 grpArray[act].announceGrp(msg);
@@ -80,39 +78,38 @@ function createGroup(msg, activity) {
         }
     }
 };
+function getActivity(activity) {
+    for (act in actArrays){
+        for (a in actArrays[act]){
+            if ( actArrays[act][a] == activity) {
+                return grpArray[act];       
+            }
+        }
+    }
+}
+
 //Bot catch for incoming messages. Splits them out to interpret what user would like to do.
 //(Could also use a bit of re-engineering. Not so high of priority.)
 bot.on('message', (msg) => {
     if (msg.content.toLowerCase().startsWith("!lfg")) {
         if (msg.content.indexOf("|") == -1) {
             var activity = msg.content.substr(5,msg.content.length-5);          
-        }else {
+        }
+        else {
             var activity = msg.content.substr(5, msg.content.indexOf("|") - 6);
         }
         createGroup(msg,activity);    
     }
     else if (msg.content.toLowerCase().startsWith("!status")) {
         var activity = msg.content.substr(8,msg.content.length-5);
-        if (activity == "pvp") {
-            if (isEmpty(pvpGroup)) {
-                bot.reply(msg, "0 players are currently looking for a pvp group")
-            }else {
-            pvpGroup.announceGrp(msg);
-            }
-        }else if (activity == "grind") {
-            if (isEmpty(grindGroup)) {
+            if (isEmpty(getActivity(activity))) {
                 bot.reply(msg, "0 players are currently looking for a grind group")
-            }else {
-                grindGroup.announceGrp(msg);
             }
-        }else if (activity == "mission") {
-            if (isEmpty(grindGroup)) {
-                 bot.reply(msg, "0 players are currently looking for a mission group")  
-            }else {
-                missionGroup.announceGrp(msg);
+            else {
+                getActivity(activity).announceGrp(msg);
             }
-        }
-    }else if (msg.content.toLowerCase().startsWith("!help")) {
+    }
+    else if (msg.content.toLowerCase().startsWith("!help")) {
         bot.reply(msg, "Usage: \"!lfg <activity>\" - Enters you into a queue for a group for specified activity. \"!lfg <activity> | @user\" - Enters you and group members into queue for a group for specified activity. \"!status <activity>\" (pvp|mission|grind) will give you the current status of groups for specified activity. !help will display this message.")
     }
 });
