@@ -124,18 +124,28 @@ bot.on('message', (msg) => {
             }
     }
     else if (msg.content.toLowerCase().startsWith("!help")) {
-        bot.reply(msg, "\"!lfg <activity>\" - Enters you into a queue for a group for specified activity. e.g. \"!lfg pvp\"")
-        bot.reply(msg, "\"!lfg <activity> | @user\" - Enters you and group members into queue for a group for specified activity. e.g. \"!lfg sausans | @Xin#2087 @Thork#4156\"")
-        bot.reply(msg, "\"!status <activity>\" will give you the current status of groups for specified activity.  !activites will show a list of current coded activities. !help will display this message.")
+        bot.sendMessage(msg.author, "\"!lfg <activity>\" - Enters you into a queue for a group for specified activity. e.g. \"!lfg pvp\" \n \"!lfg <activity> | @user\" - Enters you and group members into queue for a group for specified activity. e.g. \"!lfg sausans | @Xin#2087 @Thork#4156\" \n \"!status <activity>\" will give you the current status of groups for specified activity.\ \n \"!removeme <activity>\" will remove you from the activity, all will remove you from all queues.\ \n \"!activites\" will show a list of current coded activities. \n \"!help\" will display this message.")
     }
     else if (msg.content.toLowerCase().startsWith("!activities")) {
         bot.reply(msg, "Current Activities are: pirates, susans, pvp, disco(scrolls) and boss(scrolls)");
     }
     else if (msg.content.toLowerCase().startsWith("!removeme")) {
         var activity = msg.content.substr(10,msg.content.length-5);
-        console.log("!"+activity+"!");
-        if (isEmpty(getActivity(activity))) {
-            bot.reply(msg, "Error 45: Please report to Rostrax")
+        console.log("1"+activity+"1");
+        if (activity == "all") {
+            for (grp in grpArray){
+                if (isEmpty(grpArray[grp])){
+                    console.log("Empty Object");
+                }
+                else if (grpArray[grp].members.includes(msg.author)) {
+                    grpArray[grp].removeSelf(msg);
+                
+                }
+            }
+            bot.reply(msg, "You have been removed from all queues");
+        }
+        else if (isEmpty(getActivity(activity))) {
+            bot.reply(msg, "Error 45: There is no " + activity + " group object, if you feel this is an error, please report to Rostrax")
         }
         else {
             getActivity(activity).removeSelf(msg);
