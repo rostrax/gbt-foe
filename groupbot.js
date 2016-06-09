@@ -16,12 +16,18 @@ bot.on('ready', () => {
 });
 
 //Setting up list of words for different group types.
-var grindKeys =["grind","susans","sausans","sausages"];
-var missionKeys=["disco","scroll","boss"];
+var susansKeys =["susans","sausans","sausages"];
+var missionKeys=["disco","relic"];
+var bossKeys = ["boss", "summon"]
 var pvpKeys = ["pvp", "murder", "murdertime", "fancypants","kill","pk"];
+var pirateKeys = ["pirates", "island", "pirate"];
+var grpArray = [pvpGroup,susansGroup,missionGroup, pirateGroup, bossGroup];
+var actArrays = [ pvpKeys,susansKeys,missionKeys,pirateKeys, bossKeys]; 
 var pvpGroup;
-var grindGroup;
+var susansGroup;
 var missionGroup;
+var pirateGroup;
+var bossGroup;
 
 //Setting up group object
 function Group(number, members, activity) {
@@ -43,10 +49,20 @@ function Group(number, members, activity) {
     };
     //Function to check if group is full
     this.isFull = function(msg){
-        if (this.number == 5) {
+        if (this.number >= 5) {
             bot.reply(msg, "Party Ready for " + this.activity+ "! please send out invites to " + this.members ).catch((err) => { console.log(err); });
             this.number = 0;
             this.members ="";
+        }
+    };
+    this.removeSelf = function(msg){
+        if (this.members == msg.author) {
+            this.members ="";
+            this.number = 0;
+        }
+        else  {
+            this.members -= msg.author;
+            this.number -= 1;
         }
     };
 };
@@ -60,8 +76,6 @@ function isEmpty(object) {
   return true;
 }
 //Function to create the group objects
-var grpArray = [pvpGroup,grindGroup,missionGroup];
-var actArrays = [ pvpKeys,grindKeys,missionKeys]; 
 function createGroup(msg, activity) {
     for (act in actArrays){
         for (a in actArrays[act]){
@@ -103,16 +117,31 @@ bot.on('message', (msg) => {
     else if (msg.content.toLowerCase().startsWith("!status")) {
         var activity = msg.content.substr(8,msg.content.length-5);
             if (isEmpty(getActivity(activity))) {
-                bot.reply(msg, "0 players are currently looking for a grind group")
+                bot.reply(msg, "0 players are currently looking for a " + activity +" group")
             }
             else {
                 getActivity(activity).announceGrp(msg);
             }
     }
     else if (msg.content.toLowerCase().startsWith("!help")) {
-        bot.reply(msg, "Usage: \"!lfg <activity>\" - Enters you into a queue for a group for specified activity. \"!lfg <activity> | @user\" - Enters you and group members into queue for a group for specified activity. \"!status <activity>\" (pvp|mission|grind) will give you the current status of groups for specified activity. !help will display this message.")
+        bot.reply(msg, "\"!lfg <activity>\" - Enters you into a queue for a group for specified activity. e.g. \"!lfg pvp\"")
+        bot.reply(msg, "\"!lfg <activity> | @user\" - Enters you and group members into queue for a group for specified activity. e.g. \"!lfg sausans | @Xin#2087 @Thork#4156\"")
+        bot.reply(msg, "\"!status <activity>\" will give you the current status of groups for specified activity.  !activites will show a list of current coded activities. !help will display this message.")
+    }
+    else if (msg.content.toLowerCase().startsWith("!activities")) {
+        bot.reply(msg, "Current Activities are: pirates, susans, pvp, disco(scrolls) and boss(scrolls)");
+    }
+    else if (msg.content.toLowerCase().startsWith("!removeme")) {
+        var activity = msg.content.substr(10,msg.content.length-5);
+        console.log("!"+activity+"!");
+        if (isEmpty(getActivity(activity))) {
+            bot.reply(msg, "Error 45: Please report to Rostrax")
+        }
+        else {
+            getActivity(activity).removeSelf(msg);
+            getActivity(activity).announceGrp(msg);
+        }
     }
 });
-
 
 bot.loginWithToken("MTg5NDk4NjgwNDYwNDQzNjQ4.CjeD5g.VdwpFYgTQIzO6-lNbWjGN-bLQzg").catch((err) => {console.log(error)});
