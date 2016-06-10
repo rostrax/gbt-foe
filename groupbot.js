@@ -16,7 +16,7 @@ bot.on('ready', () => {
 });
 
 //Setting up list of words for different group types.
-var susansKeys =["susans","sausans","sausages"];
+var susansKeys =["susans","sausans","sausages", "sg"];
 var missionKeys=["disco","relic"];
 var bossKeys = ["boss", "summon"]
 var pvpKeys = ["pvp", "murder", "murdertime", "fancypants","kill","pk"];
@@ -35,8 +35,8 @@ function Group(number, members, activity) {
     this.members = members;
     this.activity = activity;
     //Function to add a member to the group
-    this.addMember = function (newMember,mentions){
-        this.number += 1;
+    this.addMember = function (newMember,mentions,numMem){
+        this.number += numMem;
         this.members += newMember;
         if (mentions ) {
             this.number += mentions.length;
@@ -83,12 +83,12 @@ function isEmpty(object) {
 function createGroup(msg, activity) {
     for (act in actArrays){
         for (a in actArrays[act]){
-            if ( actArrays[act][a] == activity) {
+            if ( actArrays[act][a] == activity.toLowerCase()) {
                 if (isEmpty(grpArray[act])) {
                     grpArray[act] = new Group(1 + msg.mentions.length, msg.author + msg.mentions, activity);
                 }
                 else {
-                    grpArray[act].addMember(msg.author, msg.mentions);
+                    grpArray[act].addMember(msg.author, msg.mentions, 1 + msg.mentions.length);
                 }
                 grpArray[act].announceGrp(msg);
                 grpArray[act].isFull(msg);
@@ -97,18 +97,14 @@ function createGroup(msg, activity) {
     }
 };
 function createLFM(msg, activity, numMem) {
-    var memPlaceHolder =[];
     for (act in actArrays){
         for (a in actArrays[act]){
-            if ( actArrays[act][a] == activity) {
+            if ( actArrays[act][a] == activity.toLowerCase()) {
                 if (isEmpty(grpArray[act])) {
                     grpArray[act] = new Group(numMem, msg.author + msg.mentions, activity);
                 }
                 else {
-                    for (i=0; i++; i < numMem){
-                        memPlaceHolder += "member"+i;
-                    }
-                    grpArray[act].addMember(msg.author, memPlaceHolder);
+                    grpArray[act].addMember(msg.author, msg.mentions, numMem);
                 }
                 grpArray[act].announceGrp(msg);
                 grpArray[act].isFull(msg);
@@ -159,7 +155,7 @@ bot.on('message', (msg) => {
             }
     }
     else if (msg.content.toLowerCase().startsWith("!help")) {
-        bot.sendMessage(msg.author, "\"!lfg <activity>\" - Enters you into a queue for a group for specified activity. e.g. \"!lfg pvp\" \n \"!lfg <activity> | @user\" - Enters you and group members into queue for a group for specified activity. e.g. \"!lfg sausans | @Xin#2087 @Thork#4156\" \n \"!status <activity>\" will give you the current status of groups for specified activity.\ \n \"!removeme <activity>\" will remove you from the activity, all will remove you from all queues.\ \n \"!activites\" will show a list of current coded activities. \n \"!help\" will display this message.")
+        bot.sendMessage(msg.author, "\"!lfg <activity>\" - Enters you into a queue for a group for specified activity. e.g. \"!lfg pvp\" \n \"!lfg <activity> | @user\" - Enters you and group members into queue for a group for specified activity. e.g. \"!lfg sausans | @Xin#2087 @Thork#4156\" \n \"!lf*m <activity>\" will only add yourself to the group but the program will show the amount of people looking for group correctly. e.g. \"!lf2m sausans\" will show 3 people lf sausans group. \n \"!status <activity>\" will give you the current status of groups for specified activity.\ \n \"!removeme <activity>\" will remove you from the activity, all will remove you from all queues.\ \n \"!activites\" will show a list of current coded activities. \n \"!help\" will display this message.")
     }
     else if (msg.content.toLowerCase().startsWith("!activities")) {
         bot.reply(msg, "Current Activities are: pirates, sausans, pvp, disco(scrolls) and boss(scrolls)");
