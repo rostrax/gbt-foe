@@ -65,6 +65,10 @@ function Group(number, members, activity) {
             this.number -= 1;
         }
     };
+    this.reset = function(msg){
+        this.members = "";
+        this.number = 0;
+    }
 };
 //Function to check for empty object
 function isEmpty(object) {
@@ -92,6 +96,26 @@ function createGroup(msg, activity) {
         }
     }
 };
+function createLFM(msg, activity, numMem) {
+    var memPlaceHolder =[];
+    for (act in actArrays){
+        for (a in actArrays[act]){
+            if ( actArrays[act][a] == activity) {
+                if (isEmpty(grpArray[act])) {
+                    grpArray[act] = new Group(numMem, msg.author + msg.mentions, activity);
+                }
+                else {
+                    for (i=0; i++; i < numMem){
+                        memPlaceHolder += "member"+i;
+                    }
+                    grpArray[act].addMember(msg.author, memPlaceHolder);
+                }
+                grpArray[act].announceGrp(msg);
+                grpArray[act].isFull(msg);
+            }
+        }
+    }
+};
 function getActivity(activity) {
     for (act in actArrays){
         for (a in actArrays[act]){
@@ -105,14 +129,25 @@ function getActivity(activity) {
 //Bot catch for incoming messages. Splits them out to interpret what user would like to do.
 //(Could also use a bit of re-engineering. Not so high of priority.)
 bot.on('message', (msg) => {
-    if (msg.content.toLowerCase().startsWith("!lfg")) {
-        if (msg.content.indexOf("|") == -1) {
-            var activity = msg.content.substr(5,msg.content.length-5);          
+    if (msg.content.toLowerCase().startsWith("!lf")) {
+        if (msg.content.charAt(3) == "g") {
+            if (msg.content.indexOf("|") == -1) {
+                var activity = msg.content.substr(5,msg.content.length-5);          
+            }
+            else {
+                var activity = msg.content.substr(5, msg.content.indexOf("|") - 6);
+            }
+            createGroup(msg,activity);   
         }
-        else {
-            var activity = msg.content.substr(5, msg.content.indexOf("|") - 6);
+        else if (msg.content.charAt(4) == "m") {
+            numMem= 5 - msg.content.charAt(3);
+            var activity = msg.content.substr(6,msg.content.length-5);
+            createLFM(msg, activity, numMem);
         }
-        createGroup(msg,activity);    
+    }
+    else if (msg.content.toLowerCase().startsWith("!!reset")) {
+        var activity = msg.content.substr(8,msg.content.length-5);
+        getActivity(activity).reset(msg);
     }
     else if (msg.content.toLowerCase().startsWith("!status")) {
         var activity = msg.content.substr(8,msg.content.length-5);
@@ -127,7 +162,7 @@ bot.on('message', (msg) => {
         bot.sendMessage(msg.author, "\"!lfg <activity>\" - Enters you into a queue for a group for specified activity. e.g. \"!lfg pvp\" \n \"!lfg <activity> | @user\" - Enters you and group members into queue for a group for specified activity. e.g. \"!lfg sausans | @Xin#2087 @Thork#4156\" \n \"!status <activity>\" will give you the current status of groups for specified activity.\ \n \"!removeme <activity>\" will remove you from the activity, all will remove you from all queues.\ \n \"!activites\" will show a list of current coded activities. \n \"!help\" will display this message.")
     }
     else if (msg.content.toLowerCase().startsWith("!activities")) {
-        bot.reply(msg, "Current Activities are: pirates, susans, pvp, disco(scrolls) and boss(scrolls)");
+        bot.reply(msg, "Current Activities are: pirates, sausans, pvp, disco(scrolls) and boss(scrolls)");
     }
     else if (msg.content.toLowerCase().startsWith("!removeme")) {
         var activity = msg.content.substr(10,msg.content.length-5);
