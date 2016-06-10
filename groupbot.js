@@ -185,4 +185,4 @@ bot.on('message', (msg) => {
     }
 });
 
-bot.loginWithToken("MTg5NDk4NjgwNDYwNDQzNjQ4.CjeD5g.VdwpFYgTQIzO6-lNbWjGN-bLQzg").catch((err) => {console.log(error)});
+bot.loginWithToken("").catch((err) => {console.log(error)});
