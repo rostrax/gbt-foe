@@ -1,5 +1,5 @@
 //FoE Groupbot
-//Written by Jason C. Aka Rostrax
+//Written by Jason C. Aka Rostrax for Fist of the Empire
 //Copyright 2016
 //Do not redistribute or use without my expressed consent.
 
