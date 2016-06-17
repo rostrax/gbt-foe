@@ -125,28 +125,29 @@ function getActivity(activity) {
 //Bot catch for incoming messages. Splits them out to interpret what user would like to do.
 //(Could also use a bit of re-engineering. Not so high of priority.)
 bot.on('message', (msg) => {
-    if (msg.content.toLowerCase().startsWith("!lf")) {
-        if (msg.content.charAt(3) == "g") {
+    if (msg.content.toLowerCase().startsWith("lf")) {
+        if (msg.content.charAt(2) == "g") {
             if (msg.content.indexOf("|") == -1) {
-                var activity = msg.content.substr(5,msg.content.length-5);          
+                var activity = msg.content.substr(4,msg.content.length-4);
+                console.log("!"+activity+"!");
             }
             else {
-                var activity = msg.content.substr(5, msg.content.indexOf("|") - 6);
+                var activity = msg.content.substr(4, msg.content.indexOf("|") - 5);
             }
             createGroup(msg,activity);   
         }
-        else if (msg.content.charAt(4) == "m") {
-            numMem= 5 - msg.content.charAt(3);
-            var activity = msg.content.substr(6,msg.content.length-5);
+        else if (msg.content.charAt(3) == "m") {
+            numMem= 5 - msg.content.charAt(2);
+            var activity = msg.content.substr(5,msg.content.length-4);
             createLFM(msg, activity, numMem);
         }
     }
     else if (msg.content.toLowerCase().startsWith("!!reset")) {
-        var activity = msg.content.substr(8,msg.content.length-5);
+        var activity = msg.content.substr(8,msg.content.length-4);
         getActivity(activity).reset(msg);
     }
-    else if (msg.content.toLowerCase().startsWith("!status")) {
-        var activity = msg.content.substr(8,msg.content.length-5);
+    else if (msg.content.toLowerCase().startsWith("status")) {
+        var activity = msg.content.substr(7,msg.content.length-4);
             if (isEmpty(getActivity(activity))) {
                 bot.reply(msg, "0 players are currently looking for a " + activity +" group")
             }
@@ -154,14 +155,14 @@ bot.on('message', (msg) => {
                 getActivity(activity).announceGrp(msg);
             }
     }
-    else if (msg.content.toLowerCase().startsWith("!help")) {
-        bot.sendMessage(msg.author, "\"!lfg <activity>\" - Enters you into a queue for a group for specified activity. e.g. \"!lfg pvp\" \n \"!lfg <activity> | @user\" - Enters you and group members into queue for a group for specified activity. e.g. \"!lfg sausans | @Xin#2087 @Thork#4156\" \n \"!lf*m <activity>\" will only add yourself to the group but the program will show the amount of people looking for group correctly. e.g. \"!lf2m sausans\" will show 3 people lf sausans group. \n \"!status <activity>\" will give you the current status of groups for specified activity.\ \n \"!removeme <activity>\" will remove you from the activity, all will remove you from all queues.\ \n \"!activites\" will show a list of current coded activities. \n \"!help\" will display this message.")
+    else if (msg.content.toLowerCase().startsWith("help")) {
+        bot.sendMessage(msg.author, "\"lfg <activity>\" - Enters you into a queue for a group for specified activity. e.g. \"lfg pvp\" \n \"lfg <activity> | @user\" - Enters you and group members into queue for a group for specified activity. e.g. \"lfg sausans | @Xin#2087 @Thork#4156\" \n \"lf*m <activity>\" will only add yourself to the group but the program will show the amount of people looking for group correctly. e.g. \"lf2m sausans\" will show 3 people lf sausans group. \n \"status <activity>\" will give you the current status of groups for specified activity.\ \n \"removeme <activity>\" will remove you from the activity, all will remove you from all queues.\ \n \"activites\" will show a list of current coded activities. \n \"help\" will display this message.")
     }
-    else if (msg.content.toLowerCase().startsWith("!activities")) {
+    else if (msg.content.toLowerCase().startsWith("activities")) {
         bot.reply(msg, "Current Activities are: pirates, sausans, pvp, disco(scrolls) and boss(scrolls)");
     }
-    else if (msg.content.toLowerCase().startsWith("!removeme")) {
-        var activity = msg.content.substr(10,msg.content.length-5);
+    else if (msg.content.toLowerCase().startsWith("removeme")) {
+        var activity = msg.content.substr(9,msg.content.length-4);
         console.log("1"+activity+"1");
         if (activity == "all") {
             for (grp in grpArray){
@@ -185,4 +186,4 @@ bot.on('message', (msg) => {
     }
 });
 
-bot.loginWithToken("").catch((err) => {console.log(error)});
+bot.loginWithToken("MTg5NDk4NjgwNDYwNDQzNjQ4.CkRNpg.HvNTNTk368MA0QbNGEQaFq6eY4U").catch((err) => {console.log(error)});
