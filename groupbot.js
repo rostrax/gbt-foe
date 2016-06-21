@@ -61,7 +61,7 @@ function Group(number, members, activity) {
             this.number = 0;
         }
         else  {
-            this.members -= msg.author;
+            this.members = this.members - msg.author;
             this.number -= 1;
         }
     };
@@ -117,6 +117,9 @@ function getActivity(activity) {
         for (a in actArrays[act]){
             if ( actArrays[act][a] == activity) {
                 return grpArray[act];       
+            }
+            else{
+                return "No acitivty by that name";
             }
         }
     }
