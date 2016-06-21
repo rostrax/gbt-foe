@@ -137,6 +137,8 @@ bot.on('message', (msg) => {
             else {
                 var activity = msg.content.substr(4, msg.content.indexOf("|") - 5);
             }
+            console.log(msg.mentions.length);
+            console.log(msg.mentions.count);
             createGroup(msg,activity);   
         }
         else if (msg.content.charAt(3) == "m") {
