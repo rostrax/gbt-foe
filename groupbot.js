@@ -30,17 +30,17 @@ var pirateGroup;
 var bossGroup;
 
 //Setting up group object
-function Group(number, members, activity) {
+function Group(number, members, mentions, activity) {
     this.number = number;
-    this.members = members;
+    this.members = [members.toString(), mentions.toString()];
     this.activity = activity;
     //Function to add a member to the group
     this.addMember = function (newMember,mentions,numMem){
         this.number += numMem;
-        this.members += newMember;
+        this.members.push(newMember.toString());
         if (mentions ) {
             this.number += mentions.length;
-            this.members +=mentions;
+            this.members.push(mentions.toString());
         }
     };
     //Function to announce group status 
@@ -52,21 +52,42 @@ function Group(number, members, activity) {
         if (this.number >= 5) {
             bot.reply(msg, "Party Ready for " + this.activity+ "! please send out invites to " + this.members ).catch((err) => { console.log(err); });
             this.number = 0;
-            this.members ="";
+            this.members =[];
         }
     };
     this.removeSelf = function(msg){
         if (this.members == msg.author) {
-            this.members ="";
+            this.members = [];
             this.number = 0;
         }
-        else  {
-            this.members = this.members - msg.author;
-            this.number -= 1;
+        else {
+            u = msg.author.toString();
+            i=this.members.indexOf(u);
+            switch (i) {
+                case 0:
+                    this.members =this.members.slice(1,2,3,4);
+                    break;
+                case 1:
+                    this.members =this.members.slice(0,2,3,4);
+                    break;
+                case 2:
+                    this.members =this.members.slice(0,1,3,4);
+                    break;
+                case 3:
+                    this.members = this.members.slice(0,1,2,4);
+                    break;
+                case 4:
+                    this.members.slice(0,1,2,3);
+                    break;
+                case 5:
+                    this.members.slice(0,1,2,3);
+                    break;
+            }
+            this.number -= 1;      
         }
     };
     this.reset = function(msg){
-        this.members = "";
+        this.members = [];
         this.number = 0;
     }
 };
@@ -85,10 +106,13 @@ function createGroup(msg, activity) {
         for (a in actArrays[act]){
             if ( actArrays[act][a] == activity.toLowerCase()) {
                 if (isEmpty(grpArray[act])) {
-                    grpArray[act] = new Group(1 + msg.mentions.length, msg.author + msg.mentions, activity);
+                    grpArray[act] = new Group(1 + msg.mentions.length, msg.author, msg.mentions, activity);
                 }
-                else {
-                    grpArray[act].addMember(msg.author, msg.mentions, 1 + msg.mentions.length);
+                else if (msg.mentions.length >= 1) {
+                    grpArray[act].addMember(msg.author, msg.mentions, msg.mentions.length);
+                }
+                else{
+                    grpArray[act].addMember(msg.author, msg.mentions, 1);
                 }
                 grpArray[act].announceGrp(msg);
                 grpArray[act].isFull(msg);
@@ -101,7 +125,7 @@ function createLFM(msg, activity, numMem) {
         for (a in actArrays[act]){
             if ( actArrays[act][a] == activity.toLowerCase()) {
                 if (isEmpty(grpArray[act])) {
-                    grpArray[act] = new Group(numMem, msg.author + msg.mentions, activity);
+                    grpArray[act] = new Group(numMem, msg.author, msg.mentions, activity);
                 }
                 else {
                     grpArray[act].addMember(msg.author, msg.mentions, numMem);
@@ -115,11 +139,8 @@ function createLFM(msg, activity, numMem) {
 function getActivity(activity) {
     for (act in actArrays){
         for (a in actArrays[act]){
-            if ( actArrays[act][a] == activity) {
+            if ( actArrays[act][a] == activity.toLowerCase()) {
                 return grpArray[act];       
-            }
-            else{
-                return "No acitivty by that name";
             }
         }
     }
@@ -132,13 +153,11 @@ bot.on('message', (msg) => {
         if (msg.content.charAt(2) == "g") {
             if (msg.content.indexOf("|") == -1) {
                 var activity = msg.content.substr(4,msg.content.length-4);
-                console.log("!"+activity+"!");
             }
             else {
                 var activity = msg.content.substr(4, msg.content.indexOf("|") - 5);
             }
             console.log(msg.mentions.length);
-            console.log(msg.mentions.count);
             createGroup(msg,activity);   
         }
         else if (msg.content.charAt(3) == "m") {
@@ -168,7 +187,6 @@ bot.on('message', (msg) => {
     }
     else if (msg.content.toLowerCase().startsWith("removeme")) {
         var activity = msg.content.substr(9,msg.content.length-4);
-        console.log("1"+activity+"1");
         if (activity == "all") {
             for (grp in grpArray){
                 if (isEmpty(grpArray[grp])){
@@ -185,8 +203,9 @@ bot.on('message', (msg) => {
             bot.reply(msg, "Error 45: There is no " + activity + " group object, if you feel this is an error, please report to Rostrax")
         }
         else {
-            getActivity(activity).removeSelf(msg);
-            getActivity(activity).announceGrp(msg);
+            a = getActivity(activity);
+            a.removeSelf(msg);
+            a.announceGrp(msg);
         }
     }
 });
