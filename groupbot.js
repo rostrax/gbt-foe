@@ -11,9 +11,6 @@ bot.on('warn', (m) => console.log('[warn]', m));
 bot.on('debug', (m) => console.log('[debug]', m));
 bot.on('error', (m) => console.log('[error]', m));
 
-bot.on('ready', () => {
-    bot.sendMessage("185138605528842240", "Bot Ready!").catch((err) => { console.log(err); });
-});
 
 //Setting up list of words for different group types.
 var susansKeys =["susans","sausans","sausages", "sg"];
@@ -31,14 +28,19 @@ var bossGroup;
 
 //Setting up group object
 function Group(number, members, mentions, activity) {
+    
     this.number = number;
-    this.members = [members.toString(), mentions.toString()];
+    this.members = [members.toString()];
     this.activity = activity;
+    if (mentions.length >= 1) {
+        this.members.push(mentions.toString());
+        this.number += mentions.length;
+    }
     //Function to add a member to the group
     this.addMember = function (newMember,mentions,numMem){
         this.number += numMem;
         this.members.push(newMember.toString());
-        if (mentions ) {
+        if (mentions.length >= 1 ) {
             this.number += mentions.length;
             this.members.push(mentions.toString());
         }
@@ -60,30 +62,38 @@ function Group(number, members, mentions, activity) {
             this.members = [];
             this.number = 0;
         }
-        else {
+        else if (this.members.toString().includes(msg.author.toString())){
             u = msg.author.toString();
             i=this.members.indexOf(u);
+            console.log("User"+u+" Index"+i)
             switch (i) {
                 case 0:
-                    this.members =this.members.slice(1,2,3,4);
+                    this.members =this.members.slice(1,5);
                     break;
                 case 1:
-                    this.members =this.members.slice(0,2,3,4);
+                    console.log(this.members.splice(1,1,this.members[2],this.members[3]));
+                    usr=this.members[0];
+                    this.members = this.members.slice(2.5);
+                    this.members.push(usr);
                     break;
                 case 2:
-                    this.members =this.members.slice(0,1,3,4);
+                    usr=this.members.slice(0,2);
+                    this.members = this.members.slice(3.5);
+                    this.members.push(usr);
                     break;
                 case 3:
-                    this.members = this.members.slice(0,1,2,4);
+                    usr=this.members.slice(0,3);
+                    this.members = this.members.slice(4.5);
+                    this.members.push(usr);
                     break;
                 case 4:
-                    this.members.slice(0,1,2,3);
-                    break;
-                case 5:
-                    this.members.slice(0,1,2,3);
+                    this.members = this.members.slice(0.4);
+                    this.members.push(usr);
                     break;
             }
-            this.number -= 1;      
+            this.number -= 1; 
+        }else {
+            bot.reply(msg, "You are not in the group to be removed.")
         }
     };
     this.reset = function(msg){
@@ -106,12 +116,13 @@ function createGroup(msg, activity) {
         for (a in actArrays[act]){
             if ( actArrays[act][a] == activity.toLowerCase()) {
                 if (isEmpty(grpArray[act])) {
-                    grpArray[act] = new Group(1 + msg.mentions.length, msg.author, msg.mentions, activity);
+                    grpArray[act] = new Group(1, msg.author, msg.mentions, activity);
                 }
                 else if (msg.mentions.length >= 1) {
                     grpArray[act].addMember(msg.author, msg.mentions, msg.mentions.length);
                 }
                 else{
+                    console.log(" Mentions " +msg.mentions.toString());
                     grpArray[act].addMember(msg.author, msg.mentions, 1);
                 }
                 grpArray[act].announceGrp(msg);
