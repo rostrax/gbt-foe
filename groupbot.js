@@ -38,7 +38,7 @@ function Group(number, members, mentions, activity) {
     }
     //Function to add a member to the group
     this.addMember = function (newMember,mentions,numMem){
-        if (this.members.toString().includes(msg.author.toString())){
+        if (this.members.toString().includes(newMember.toString())){
             bot.reply(msg, "You are already in the requested group. Please type \"status activity\" to see the group status.");
         }
         else{
