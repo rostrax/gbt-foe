@@ -38,11 +38,16 @@ function Group(number, members, mentions, activity) {
     }
     //Function to add a member to the group
     this.addMember = function (newMember,mentions,numMem){
-        this.number += numMem;
-        this.members.push(newMember.toString());
-        if (mentions.length >= 1 ) {
-            this.number += mentions.length;
-            this.members.push(mentions.toString());
+        if (this.members.toString().includes(msg.author.toString())){
+            bot.reply(msg, "You are already in the requested group. Please type \"status activity\" to see the group status.");
+        }
+        else{
+            this.number += numMem;
+            this.members.push(newMember.toString());
+            if (mentions.length >= 1 ) {
+                this.number += mentions.length;
+                this.members.push(mentions.toString());
+            }
         }
     };
     //Function to announce group status 
