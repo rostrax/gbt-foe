@@ -28,7 +28,6 @@ var bossGroup;
 
 //Setting up group object
 function Group(number, members, mentions, activity) {
-    
     this.number = number;
     this.members = [members.toString()];
     this.activity = activity;
@@ -39,7 +38,7 @@ function Group(number, members, mentions, activity) {
     //Function to add a member to the group
     this.addMember = function (newMember,mentions,numMem){
         if (this.members.toString().includes(newMember.toString())){
-            bot.reply(msg, "You are already in the requested group. Please type \"status activity\" to see the group status.");
+            this.announceGrp();
         }
         else{
             this.number += numMem;
@@ -208,7 +207,7 @@ bot.on('message', (msg) => {
                 if (isEmpty(grpArray[grp])){
                     console.log("Empty Object");
                 }
-                else if (grpArray[grp].members.includes(msg.author)) {
+                else if (grpArray[grp].members.toString().includes(msg.author.toString())) {
                     grpArray[grp].removeSelf(msg);
                 
                 }
