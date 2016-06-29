@@ -18,7 +18,7 @@ var missionKeys=["disco","relic"];
 var bossKeys = ["boss", "summon"]
 var pvpKeys = ["pvp", "murder", "murdertime", "fancypants","kill","pk"];
 var pirateKeys = ["pirates", "island", "pirate"];
-var valKeys = ["valencia","desert","survival"]
+var valKeys = ["valencia","desert","survival"];
 var grpArray = [pvpGroup,susansGroup,missionGroup, pirateGroup,bossGroup,valGroup];
 var actArrays = [ pvpKeys,susansKeys,missionKeys,pirateKeys,bossKeys,valkeys]; 
 var pvpGroup;
