@@ -18,13 +18,15 @@ var missionKeys=["disco","relic"];
 var bossKeys = ["boss", "summon"]
 var pvpKeys = ["pvp", "murder", "murdertime", "fancypants","kill","pk"];
 var pirateKeys = ["pirates", "island", "pirate"];
-var grpArray = [pvpGroup,susansGroup,missionGroup, pirateGroup, bossGroup];
-var actArrays = [ pvpKeys,susansKeys,missionKeys,pirateKeys, bossKeys]; 
+var valKeys = ["valencia","desert","survival"]
+var grpArray = [pvpGroup,susansGroup,missionGroup, pirateGroup,bossGroup,valGroup];
+var actArrays = [ pvpKeys,susansKeys,missionKeys,pirateKeys,bossKeys,valkeys]; 
 var pvpGroup;
 var susansGroup;
 var missionGroup;
 var pirateGroup;
 var bossGroup;
+var valGroup;
 
 //Setting up group object
 function Group(number, members, mentions, activity) {
