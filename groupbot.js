@@ -19,14 +19,15 @@ var bossKeys = ["boss", "summon"]
 var pvpKeys = ["pvp", "murder", "murdertime", "fancypants","kill","pk"];
 var pirateKeys = ["pirates", "island", "pirate"];
 var nagaKeys = ["nagas","naga","temple"];
-var baskKeys= ["basilisk","apbelt","den","baskden"];
+var baskKeys= ["basilisk","apbelt","den","baskden","basilisks"];
 var bandKeys = ["bandit","lair","bandits"];
 var crescentKeys = ["shrine","apring","crescent","guardians"];
 var bouldKeys =["dpbelt", "boulder","centaurs","outpost"];
-var cadryKeys =["dpring", "cadshrine","cultists"];
+var cadryKeys =["dpring", "cadshrine","cultists","cultist"];
 var valKeys = ["valencia","desert","survival"];
-var grpArray = [pvpGroup,susansGroup,missionGroup, pirateGroup,bossGroup,valGroup,nagaGroup,baskGroup,bandGroup,cadryGroup,crescentGroup,bouldGroup];
-var actArrays = [ pvpKeys,susansKeys,missionKeys,pirateKeys,bossKeys,valKeys,nagaKeys,baskKeys,bandKeys,crescentKeys,bouldKeys, cadryKeys]; 
+var whaleKeys = ["whales","whale","whaling","dickhunting"]
+var grpArray = [pvpGroup,susansGroup,missionGroup, pirateGroup,bossGroup,valGroup,nagaGroup,baskGroup,bandGroup,cadryGroup,crescentGroup,bouldGroup,whaleGroup];
+var actArrays = [ pvpKeys,susansKeys,missionKeys,pirateKeys,bossKeys,valKeys,nagaKeys,baskKeys,bandKeys,crescentKeys,bouldKeys, cadryKeys,whaleKeys]; 
 var pvpGroup;
 var nagaGroup;
 var baskGroup;
@@ -39,6 +40,7 @@ var missionGroup;
 var pirateGroup;
 var bossGroup;
 var valGroup;
+var whaleGroup;
 
 //Setting up group object
 function Group(number, members, mentions, activity) {
