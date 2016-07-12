@@ -14,16 +14,16 @@ bot.on('error', (m) => console.log('[error]', m));
 
 //Setting up list of words for different group types.
 var susansKeys =["susans","sausans","sausages", "sg"];
-var missionKeys=["disco","relic"];
+var missionKeys=["disco","relic","discos"];
 var bossKeys = ["boss", "summon"]
 var pvpKeys = ["pvp", "murder", "murdertime", "fancypants","kill","pk"];
 var pirateKeys = ["pirates", "island", "pirate"];
 var nagaKeys = ["nagas","naga","temple"];
-var baskKeys= ["basilisk","apbelt","den","baskden","basilisks"];
+var baskKeys= ["basilisk","apbelt","den","baskden","basilisks","basalisk","basalisks"];
 var bandKeys = ["bandit","lair","bandits"];
 var crescentKeys = ["shrine","apring","crescent","guardians"];
 var bouldKeys =["dpbelt", "boulder","centaurs","outpost"];
-var cadryKeys =["dpring", "cadshrine","cultists","cultist"];
+var cadryKeys =["dpring", "cadshrine","cultists","cultist","cadry"];
 var valKeys = ["valencia","desert","survival"];
 var whaleKeys = ["whales","whale","whaling","dickhunting"]
 var grpArray = [pvpGroup,susansGroup,missionGroup, pirateGroup,bossGroup,valGroup,nagaGroup,baskGroup,bandGroup,cadryGroup,crescentGroup,bouldGroup,whaleGroup];
@@ -214,7 +214,7 @@ bot.on('message', (msg) => {
         bot.sendMessage(msg.author, "\"lfg <activity>\" - Enters you into a queue for a group for specified activity. e.g. \"lfg pvp\" \n \"lfg <activity> | @user\" - Enters you and group members into queue for a group for specified activity. e.g. \"lfg sausans | @Xin#2087 @Thork#4156\" \n \"lf*m <activity>\" will only add yourself to the group but the program will show the amount of people looking for group correctly. e.g. \"lf2m sausans\" will show 3 people lf sausans group. \n \"status <activity>\" will give you the current status of groups for specified activity.\ \n \"removeme <activity>\" will remove you from the activity, all will remove you from all queues.\ \n \"activites\" will show a list of current coded activities. \n \"help\" will display this message.")
     }
     else if (msg.content.toLowerCase().startsWith("activities")) {
-        bot.reply(msg, "Current Activities are: pirates, sausans, pvp, disco(scrolls) and boss(scrolls)");
+        bot.reply(msg, "Current Activities are: pirates, sausans, pvp, whales, cultists, crescent, basalisks, bandits, nagas, centaurs, disco(scrolls) and boss(scrolls)");
     }
     else if (msg.content.toLowerCase().startsWith("removeme")) {
         var activity = msg.content.substr(9,msg.content.length-4);
