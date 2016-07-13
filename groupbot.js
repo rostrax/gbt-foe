@@ -191,7 +191,7 @@ bot.on('message', (msg) => {
             console.log(msg.mentions.length);
             createGroup(msg,activity);   
         }
-        else if (msg.content.charAt(3) == "m") {
+        else if (msg.content.toLowerCase().charAt(3) == "m") {
             numMem= 5 - msg.content.charAt(2);
             var activity = msg.content.substr(5,msg.content.length-4);
             createLFM(msg, activity, numMem);
