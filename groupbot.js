@@ -181,7 +181,7 @@ function getActivity(activity) {
 //(Could also use a bit of re-engineering. Not so high of priority.)
 bot.on('message', (msg) => {
     if (msg.content.toLowerCase().startsWith("lf")) {
-        if (msg.content.charAt(2) == "g") {
+        if (msg.content.toLowerCase().charAt(2) == "g") {
             if (msg.content.indexOf("|") == -1) {
                 var activity = msg.content.substr(4,msg.content.length-4);
             }
