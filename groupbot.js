@@ -16,7 +16,7 @@ bot.on('error', (m) => console.log('[error]', m));
 var susansKeys =["susans","sausans","sausages", "sg"];
 var missionKeys=["disco","relic","discos"];
 var bossKeys = ["boss", "summon"]
-var pvpKeys = ["pvp", "murder", "murdertime", "fancypants","kill","pk"];
+var pvpKeys = ["pvp", "fancypants","kill","pk"];
 var pirateKeys = ["pirates", "island", "pirate"];
 var nagaKeys = ["nagas","naga","temple"];
 var baskKeys= ["basilisk","apbelt","den","baskden","basilisks","basalisk","basalisks"];
@@ -25,7 +25,7 @@ var crescentKeys = ["shrine","apring","crescent","guardians"];
 var bouldKeys =["dpbelt", "boulder","centaurs","outpost"];
 var cadryKeys =["dpring", "cadshrine","cultists","cultist","cadry"];
 var valKeys = ["valencia","desert","survival"];
-var whaleKeys = ["whales","whale","whaling","dickhunting"]
+var whaleKeys = ["whales","whale","whaling"]
 var grpArray = [pvpGroup,susansGroup,missionGroup, pirateGroup,bossGroup,valGroup,nagaGroup,baskGroup,bandGroup,cadryGroup,crescentGroup,bouldGroup,whaleGroup];
 var actArrays = [ pvpKeys,susansKeys,missionKeys,pirateKeys,bossKeys,valKeys,nagaKeys,baskKeys,bandKeys,crescentKeys,bouldKeys, cadryKeys,whaleKeys]; 
 var pvpGroup;
